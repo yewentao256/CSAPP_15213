@@ -267,7 +267,7 @@ void touch3(char *sval)     //   函数开始地址为：0x4018fa
 ```
 
 answer：我们将string的ascii形式注入，并调用touch3函数。
-- 注意到这里是字符串所以我们不能再直接将cookie的值移动到%rdi，注入代码如下
+- 注意到这里是字符串所以我们不能再直接将cookie的值移动到%rdi
 - 注意到函数压栈可能会破坏getbuf的空间（函数都没有开辟新空间而是直接push）解析：在getbuf返回后rsp加回时，直接调用touch3就会使得部分我们的字串被覆盖。
 
 所以我们直接放在test的栈帧中（超过getbuf的返回地址即test的栈帧了）
