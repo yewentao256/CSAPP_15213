@@ -10,9 +10,9 @@ Learning About CSAPP-15213
 
 Note: the questions can be quite hard, be patient and you'll figure it out!
 
-- [x] ![datalab](datalab/datalab.md)
-- [ ] bomblab
-- [ ] attacklab
+- [x] [datalab](datalab/datalab.md)
+- [x] [bomblab](bomblab/bomblab.md)
+- [x] [attacklab](attacklab/attacklab.md)
 - [ ] cachelab
 - [ ] tshlab
 - [ ] malloclab
