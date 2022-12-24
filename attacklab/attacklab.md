@@ -26,7 +26,7 @@ void test()
 {
     int val;
     val = getbuf();
-    printf("No exploit. Getbuf returned 0x%x\n", val;
+    printf("No exploit. Getbuf returned 0x%x\n", val);
 }
 void touch1()
 {

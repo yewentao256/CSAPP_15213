@@ -1,0 +1,261 @@
+# Class Notes
+
+[TOC]
+
+## 1. Overview
+
+### Course theme
+
+- theme：Abstraction is good but don't forget reality
+
+### Five realities
+
+- **ints are not integers；floats are not real**
+  - To understand numbers in computer
+  - eg：`x^2 >= 0`?
+    - for float：yes！
+    - for int： `40000*40000=1600000000` yes! `50000*50000=??` not!
+  - eg：`(x+y) + z = x+(y+z)`?
+    - for int: yes!
+  - for于 float: `(1e20+-1e20)+3.14 = 3.14`； `(1e20+(-1e20+3.14) = ??`
+- **you've got to know assembly**
+  - learning about assembly
+- **memory matters**
+  - memory management
+  - eg：![image](resources/overview-memory.png)
+- **there's more to performance than asymptotic complexity**
+  - eg：![image](resources/overview-performance.png)
+- **computers do more than execute programs**
+  - IO/network
+
+### How the course fits into the CS/ECE curriculum
+
+build up the base for another courses.
+
+### Course architecture
+
+- programs and data
+  - L1(datalab): manipulating bits
+  - L2(bomblab): defuse a binary bomb
+  - L3(attacklab): injection attacks
+
+- memory hierarchy
+  - L4(cachlab): build a cache simulator
+
+- Exceptional control flow
+  - L5(tshlab): write a shell
+
+- Virtual memory
+  - L6(malloclab): write a malloc package
+
+- networking and concurrency
+  - L7(proxylab): write a web proxy
+
+## 2. Bits,Bytes, and Integers
+
+### Representing information as bits
+
+- Everything is bits.
+- Encoding Byte values.
+
+### Bit-level manipulations
+
+- Boolean Algebra
+- Bit-level options in C: & | ~ ^
+- Logic Operations in C: && || !
+- Shift operations
+  - eg: ![image](resources/bit-shift.png)
+
+### Integers
+
+#### Unsigned and signed
+
+- Numeric ranges
+  - signed: Tmax, Tmin
+  - unsigned: Umax, Umin
+
+#### Conversion, casting
+
+- B2T, T2B
+- B2U, U2B
+- U2T, T2U
+- Note: if both signed and unsigned in one expression, **signed value implicitly cast to unsigned**.
+  - eg: `for(int i = n; i-sizeof(char); i--) {}  // run forever!`
+- Corner case: normally -(-x) = x, but **-Tmin(-32) != Tmax(31)** (number is in 5 bits)
+
+#### Expanding, truncating
+
+- expanding
+  - eg: 1010(-6) -> 111010(-6)
+- truncating
+  - eg: unsigned: `11011(27) -> 1011(9)  // mod 16`
+  - just remember: directly get the bytes then calculate it.
+
+#### Addition, negation, multiplication, shifting
+
+- addition(negation)
+  - unsigned addition
+  - complement addition
+  - overflow
+- multiplication
+  - unsigned multiplication
+  - signed multiplication
+    - eg: 5 * 5 = 25:0001-1001(-7). the result is -7
+- shift
+  - power-of-2 multiply with shift
+  - unsigned power-of-2 division with shift
+    - eg: 0011(3) /2 (>>1) = 0001(1)--logical shift
+  - signed power-of-2 division:
+    - eg: 1101(-3) /2 (>>1) = 1110(-2)--arithmetic shift
+
+- extra:
+  - x -> -x, just do !x+1
+    - eg: -(1010) (-6) = 0101+0001 = 0110(6)
+
+### Representations in memory, pointers and strings
+
+- Byte-Oriented Memory Organization
+- Machine words: 32bits, 64bits
+- Word-Oriented Memory Organization
+- Byte Ordering
+  ![image](resources/bytes-order.png)
+
+## 3. Floating Point
+
+### Fractional binary number
+
+eg:
+
+- 5 + 3/4 = 101.11~2~
+- 2 + 7/8 = 10.111~2~
+- 1/3 = 0.0101[01]...~2~
+
+### IEEE Floating Point
+
+![image](resources/floating-point.png)
+
+- **f = (-1)^s^  M  2^E^**
+  - `E = exp - Bias`
+    - eg. exp has 8 bits, **Normally** 1<=exp<=254, bias = 127, so `-126<=E<=127`
+    - why introducing the `bias`? for better comparison
+  - M = 1.0 + frac = 1.xxxx..x~2~
+    - eg. minimum: xxxx..x = 0000..0, M = 1.0
+    - eh. maximum: xxxx..x = 1111..1, M -> 2.0
+  - Take 15123 as an example:
+    - 15213 = 11101101101101~2~ = 1.1101101101101~2~ * 2^13^
+    - M = 1.1101101101101~2~, frac = `1101101101101` + `0000000000`
+    - E = 13, bias = 127 -> exp = 140 = 10001100~2~
+    - so result:
+      - 0
+      - 10001100
+      - 1101101101101 0000000000
+      - totally 32 bits
+
+- For **Denormalized Number**: when exp = 00000..0
+  - **E = 1 - bias**,
+  - **M = frac** (no leading 1)
+  - cases:
+    - frac = 0000.0: representing `0` (including `-0` and `+0`)
+    - frac != 0000.0: closest to `0`
+
+- For **Denormalized Number**: when exp = 1111..1
+  - **E = 1 - bias**,
+  - **M = frac** (no leading 1)
+    - why for this? to represent more numbers, see the figure below
+  - cases:
+    - frac = 0000.0: representing `inf`
+    - frac != 0000.0: representing `nan`
+
+- Examples together
+
+![image](resources/floating-point2.png)
+
+- Note: when closing to 0, the numbers get denser
+
+### Rounding, addition and multiplication
+
+#### Round
+
+- strategy
+  - Towards 0
+  - Round down(-inf)
+  - Round up(+inf)
+  - Nearest Even(**default**)
+
+- eg: round to nearest 1/4
+  - 2 + 3/16 = 10.00`110`~2~ = 10.01~2~ (>1/2 - UP)
+  - 2 + 7/8 = 10.11`100`~2~ = 11.00~2~ (exactly half)
+  - 2 + 5/8 = 10.10`100`~2~ = 10.10~2~ (exactly half)
+
+#### multiplication
+
+- (-1)^s1^  M1  2^E1^ * (-1)^s2^  M2  2^E2^
+  - s = s1 ^ s2
+  - M = M1 * M2
+  - E = E1 + E2
+
+- if after calculation,
+  - M > 2 -> shift M right, **increment E**
+  - If E out of range, **overflow**
+  - Round M to fit **frac**
+
+So now you understand why `(1e20*1e20)*1e-20 = inf`； `(1e20*(1e-20*1e20) = 1e20`
+
+`a>=b & c>=0 so a*c >= b*c`? Almost, Always consider **inf** and **nan**
+
+#### addition
+
+core: **get binary points lined up**
+
+- (-1)^s1^  M1  2^E1^ + (-1)^s2^  M2  2^E2^
+
+- if after calculation,
+  - M > 2 -> shift M right, **increment E**
+  - M < 1 -> shift M left, **decrement E**
+  - If E out of range, **overflow**
+  - Round M to fit **frac**
+
+So now you understand why `(1e20+-1e20)+3.14 = 3.14`； `(1e20+(-1e20+3.14) = ??`
+
+### Floating point to C
+
+int -> float: round 32 bits value to 23 bits frac
+
+double -> int: round 52 bits frac to 32 bits
+
+2/3 != 2/3.0 (floating point)
+
+double d < 0 -> d*2 <0 (YES! even if overflow, it's `negative inf`)
+
+## 4. Machine Level Programing
+
+### C, assembly, machine code
+
+The process of compiling C:
+
+![image](resources/turning-c-into-object-code.png)
+
+Compiler: GCC, to make assembly code: `gcc -Og -S ...`
+
+to make exec file(actually bytes of instructions) into assembly code: `objdump -d ...`
+
+### Assembly Basics: Registers, operands, move
+
+Some specific registers:
+
+- `%rsp`: stack pointer
+- `%rdi`: first argument of function
+- `%rsi`: second argument of function
+- `%rdx`: third argument of function
+
+Memory access of **moveq**:
+
+- Normally: `(%rax)` = `Mem[rax]`
+- With offset: `8(%rax)` = `Mem[rax + 8]`
+- Generally: `D(Rb, Ri, S)` = `Mem[Rb + S * Ri + D]`
+
+### Arithmetic & logical operations
+
+Example of **leaq**
+
+- `leaq 4(%rsi, %rsi, 2), %rdx`: `rdx = rsi + 2 * rsi + 4`
