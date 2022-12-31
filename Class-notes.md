@@ -248,6 +248,16 @@ Some specific registers:
 - `%rsi`: second argument of function
 - `%rdx`: third argument of function
 
+the relationships between different names of a register:
+
+```bash
+|63..32|31..16|15-8|7-0|
+              | AH |AL |
+              | AX.....|
+       |EAX............|
+|RAX...................|
+```
+
 Memory access of **moveq**:
 
 - Normally: `(%rax)` = `Mem[rax]`
@@ -256,6 +266,123 @@ Memory access of **moveq**:
 
 ### Arithmetic & logical operations
 
-Example of **leaq**
+For example: **leaq**
 
 - `leaq 4(%rsi, %rsi, 2), %rdx`: `rdx = rsi + 2 * rsi + 4`
+
+### Control: Condition codes
+
+- `%rip`: instruction pointer
+- **Condition Codes**
+  - `CF`(carry flag)--for `unsigned` overflow
+  - `ZF`(zero flag)
+  - `SF`(sign flag)--for `signed`
+  - `OF`(overflow flag)-- for `signed` overflow
+
+- `cmpq`: compare number (`b-a`) and set condition codes above
+- `testq`: compare number (`a&b`) but only set `ZF` and `SF`
+- `setX`: set the low-order byte of destination to `0` or `1` based on the condition codes above
+
+![image](resources/setX-instructions.png)
+
+- example
+
+```c
+int gt (long x, long y) {return x>y;}
+```
+
+```assembly
+# compare x, y  (%rsi is y, %rdi is x)
+cmpq    %rsi, %rdi
+
+# Set when > (if x-y > 0, SF=1 and OF=1 or SF=0, OF=0)
+setg    %al
+
+# move bytes to long, zero padding
+# Note this is %eax rather than %rax
+# this is because 32-bit instructions also set upper 32 bits to 0.
+movzbl  %al,  %eax
+ret
+```
+
+### Conditional branches
+
+- `jX`: jump to different part of code depending on condition codes
+
+![image](resources/jX-instruction.png)
+
+- Note: Sometimes like `Test? x+y:x-y` in C, it's efficient to calculate `x+y` and `x-y` both, then choose one using `conditional move` rather than using branches. Since **branches are very disruptive to instruction flow through pipelines**
+
+- `conditional move`
+  - eg: `cmovle %rdx %rax`: if <=, result = %rdx
+  - only use this when calculation is simple and is safe!
+
+### Loops
+
+Using branches and control introduced above to realize `do-while`, `while` and `for`.
+
+### Switch Statements
+
+- Structure:
+
+![image](resources/switch-jump-table.png)
+
+- How to form a jump table?
+
+![image](resources/switch-form-table.png)
+
+Normally to make an array, and for some holes like `x=0`, `x=4`, let it go to the default part.
+
+Note: if x has a extremely large case like 10086, it can add a **bias** then make an array flow(like mapping to 7), too. Or sometimes it can be optimized to a decision tree--simple **if else** structure(in cases it's hard to make an array flow)
+
+- How to jump through table?
+
+```assembly
+# x compare 6
+cmpq $6, %rdi
+
+# Use default: since we use **ja**(unsigned) here
+# jump if x > 6 or x < 0(unsigned negative is a large positive)
+ja   .L8
+
+# refer to (L4 + 8 * %rdi) address, get the value of it and then jump
+jmp *.L4(, %rdi, 8)
+```
+
+### Stack Structure
+
+![image](resources/memory-stack.png)
+
+### Calling Conventions
+
+- passing control: when calling a function, push the next instruction address to the stack, when ret, get the address back then jump to the address.
+
+![image](resources/procedure-control-flow.png)
+
+- passing data:
+
+![image](resources/procedure-passing-data.png)
+
+- save local data:
+
+![image](resources/procedure-stack-frame.png)
+
+Normally, use `%rsp` directly, sub some value at the beginning, then add it back before `return`.
+
+![image](resources/procedure-stack-frame-eg.png)
+
+It's OK to use `movl` to `%esi`, since the rest of 32 bits would be set to zero. This depends on the compiler
+
+Sometimes use `%rbp`, like allocating an array or memory buffer
+
+- **Caller Saved** and **Callee Saved**
+
+Rules we need to obey, set in ABI(application binary interface)
+
+caller saved: the register can be overwritten--`%rax`, all of the arguments from `%rdi` to `%r9`, tmp `%r10` and `%r11`
+
+callee saved: the callee make sure not to affect any data used in the caller--`%rbx`, from `%r12` to `%r14`, `%rbp` and `%rsp`
+
+- recursive function example:
+
+![image](resources/procedure-recursive-function.png)

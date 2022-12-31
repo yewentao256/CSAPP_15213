@@ -31,8 +31,8 @@ Lectures:
 - [x] Lecture 03: Bits, Bytes, and Integers (cont.)
 - [x] Lecture 04: Floating Point
 - [x] Lecture 05: Machine-Level Programming I: Basics
-- [ ] Lecture 06: Machine-Level Programming II: Control
-- [ ] Lecture 07: Machine-Level Programming III: Procedures
+- [x] Lecture 06: Machine-Level Programming II: Control
+- [x] Lecture 07: Machine-Level Programming III: Procedures
 - [ ] Lecture 08: Machine-Level Programming IV: Data
 - [ ] Lecture 09: Machine-Level Programming V: Advanced Topics
 - [ ] Lecture 10: Program Optimization
@@ -57,7 +57,7 @@ Lectures:
 Recitations(Optional):
 
 - [x] Recitation 3: Datalab and Data Representations
-- [ ] Recitation 4: Bomb Lab
+- [x] Recitation 4: Bomb Lab
 - [ ] Recitation 5: Attack Lab and Stacks
 - [ ] Recitation 6: C Review
 - [ ] Recitation 7: Cache Lab and Blocking
