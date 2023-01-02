@@ -386,3 +386,23 @@ callee saved: the callee make sure not to affect any data used in the caller--`%
 - recursive function example:
 
 ![image](resources/procedure-recursive-function.png)
+
+### Arrays
+
+![image](resources/array-memory.png)
+
+![image](resources/array-access.png)
+
+### Structures
+
+![image](resources/structure-alignment.png)
+
+### Floating Point
+
+float add(param passed in `%xmm0`, `%xmm1`):
+
+![image](resources/floating-point-add.png)
+
+double add:
+
+![image](resources/floating-point-add2.png)
