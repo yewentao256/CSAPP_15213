@@ -406,3 +406,42 @@ float add(param passed in `%xmm0`, `%xmm1`):
 double add:
 
 ![image](resources/floating-point-add2.png)
+
+### Memory Layout
+
+![image](resources/memory-layout.png)
+
+- **stack** for local variable (if more than 8MB, segmentation fault)
+- **heap** memory is dynamically allocated for `malloc`、`new` ...
+- **data** is for `static` data
+- **Text/Shared** Libraries for executable instructions(read only)
+
+### Buffer Overflow
+
+![image](resources/buffer-overflow-example.png)
+
+If you input 23 characters in `gets()`, it's ok (a default `\0` at the end of line)
+
+If you put 24 characters or more, it will gets to the `return address` and may cause a `segmentation fault`(depends on the address you jump to)
+
+#### code injection attacks
+
+Covering the return address, and use the instruction we input (see `attacklab` for more details)
+
+Ways to avoid:
+
+- avoid overflow Vulnerabilities in Code:
+  - `fgets` instead of `gets`
+  - `strncpy` instead of `strcpy`
+  - don't use `scanf` with `%s`
+- system-level protections
+  - random stack offset: hard to predict the beginning of code
+  - non-executable code segments: only execute the `read-only` memory instructions
+- stack Canaries
+  - save `Canary` in %rsp at first and then recheck it in the end(see `bomblab` for more details)
+
+#### Return-Oriented Programming attacks
+
+![image](resources/ROP-attack.png)
+
+Use existing codes(gadgets) to attack, see **attacklab** for more details.
