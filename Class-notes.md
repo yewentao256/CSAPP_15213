@@ -445,3 +445,91 @@ Ways to avoid:
 ![image](resources/ROP-attack.png)
 
 Use existing codes(gadgets) to attack, see **attacklab** for more details.
+
+## 5. Program Optimization
+
+### Generally Useful Optimizations
+
+- Code motion/pre-computation
+
+![image](resources/code-motion.png)
+
+- strength reduction
+
+Core: replace costly operation with simpler one (eg. 16 * x -> x <<4)
+
+- sharing of common sub-expressions
+
+eg: `f = func(param)`, then use f directly, instead of `a = func(param) + 2, b = func(param)*3 ...`
+
+- removing unnecessary procedure calls
+
+![image](resources/procedure-call-reduction.png)
+
+Why compiler doesn't optimize this? Remember compiler always considers the procedure as **black box**. (It doesn't know whether the procedure will change the pointer or global variable, etc.)
+
+Note: in **python**, `len(str)` is a O(1) func, so it doesn't really matter.
+
+- Remove memory accessing
+
+![image](resources/memory-accessing.png)
+
+As you can see the `b[i]` has to read from memory **each time**
+
+It's better using a local variable to cal the sum
+
+Why compiler can't optimize it? **Memory Aliasing**
+
+![image](resources/memory-aliasing.png)
+
+### Exploiting instruction-level parallelism
+
+- CPE (cycles per element (OP like `add`) )
+
+- modern cpu design
+
+![image](resources/mordern-cpu-design.png)
+
+- ideas of pipeline
+
+![image](resources/pipeline-ideas.png)
+
+(`p1 = a*b`, dependency)
+
+- Loop Unrolling
+
+For making use of multi-core processor
+
+```c
+for (i = 0; i < limit; i += 2){
+  // x = x + array[i] + array[i+1];
+  x = x + (array[i] + array[i+1]);  // can break the sequential dependency
+  
+  // another idea
+  // x0 = x0 + array[i];
+  // x1 = x1 + array[i+1];
+}
+```
+
+Note: Not always useful, based on the processor
+
+- SIMD operations
+
+Based on wide registers:
+
+![image](resources/SIMD-op.png)
+
+Also called **AVX instructions**
+
+### Dealing with Conditionals
+
+In order to making instructions run smoothly. We introduce the **branch predict**
+
+![image](resources/branch-prediction.png)
+
+- Simply **guess** the branch to go
+- Begin executing instructions at predicted position
+
+![image](resources/branch-misprediction.png)
+
+- It can recover when mis-prediction, causing huge performance cost

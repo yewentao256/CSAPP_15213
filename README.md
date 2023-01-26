@@ -53,7 +53,7 @@ Here we can better understand the assembly and instructions, for example
 
 Done in 2022/12, see [bomblab-practice](bomblab/bomblab-practice.md) for more details.
 
-A random bomb is generated to test, see [bomblab-real(中文)](bomblab/bomblab-real.md) for more details.
+Wanna try another bomb? Do it by yourself! Try a new random bomb, see [bomblab-real](bomblab/bomblab-real.md) for more details.
 
 ### Attacklab
 
@@ -86,7 +86,7 @@ we can make the program `jump` to another place we want.
 
 Done in 2023/1, see [attacklab-practice](attacklab/attacklab-practice.md) for more details.
 
-A random attack-lab is generated to test, see [attacklab-real(中文)](attacklab/attacklab-real.md) for more details.
+Wanna try another attack? Do it by yourself! Try a new random attack, see [attacklab-real](attacklab/attacklab-real.md) for more details.
 
 ### The rest of lab
 
@@ -112,7 +112,7 @@ Lectures:
 - [x] Lecture 07: Machine-Level Programming III: Procedures
 - [x] Lecture 08: Machine-Level Programming IV: Data
 - [x] Lecture 09: Machine-Level Programming V: Advanced Topics
-- [ ] Lecture 10: Program Optimization
+- [x] Lecture 10: Program Optimization
 - [ ] Lecture 11: The Memory Hierarchy
 - [ ] Lecture 12: Cache Memories
 - [ ] Lecture 13: Linking
