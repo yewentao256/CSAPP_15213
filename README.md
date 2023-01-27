@@ -113,7 +113,7 @@ Lectures:
 - [x] Lecture 08: Machine-Level Programming IV: Data
 - [x] Lecture 09: Machine-Level Programming V: Advanced Topics
 - [x] Lecture 10: Program Optimization
-- [ ] Lecture 11: The Memory Hierarchy
+- [x] Lecture 11: The Memory Hierarchy
 - [ ] Lecture 12: Cache Memories
 - [ ] Lecture 13: Linking
 - [ ] Lecture 14: Exceptional Control Flow: Exceptions and Processes

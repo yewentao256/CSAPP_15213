@@ -533,3 +533,67 @@ In order to making instructions run smoothly. We introduce the **branch predict*
 ![image](resources/branch-misprediction.png)
 
 - It can recover when mis-prediction, causing huge performance cost
+
+### C Review
+
+- Be careful when `unsigned u > -1`: `-1` is the biggest when unsigned
+- Initialize array with exact value
+- Remember there is a `\0` at the end of string
+- When `sizeof(xx)`, make sure xx is not a pointer
+- Remember to `free` after `malloc`
+- Don't return a pointer pointing at a local variable
+- `int *a;` when `a + 1`, address of a actually add `sizeof(int) * 1 = 4`
+
+## 6. Memory Hierarchy
+
+### Storage technologies and trends
+
+- Random-Access Memory(RAM)
+  - SRAM(static, expensive, cache, volatile: lose information when power off)
+  - DRAM(dynamic, main memory, volatile)
+
+- Read-only memory(ROM)
+  - nonvolatile: keep information when power off
+  - BIOS, firmware programs saved in ROM
+
+- Bus(collection of parallel wires) structure
+
+![image](resources/bus-structure.png)
+
+- Disk
+
+![image](resources/disk-view.png)
+
+![image](resources/disk-view2.png)
+
+capacity: `512 bytes/sector * 300 sectors/track(on average) * 20000 tracks/surface * 2 surfaces/platter * 5 platters/ disk = 30.72GB`
+
+disk access:
+
+![image](resources/disk-access.png)
+
+Normally `disk access time = seek time(4~9ms) + rotation(2~5ms) + transfer(0.02ms)`, much slower than RAM(`ns`)
+
+- Bus structure expand
+
+![image](resources/bus-structure-expand.png)
+
+Note: this is not the modern design, which use point to point connection instead of a public wire
+
+- **interrupt**: cpu never waits for disk, when data is carried from disk to memory, it will notify cpu and let cpu continue to work on that data.
+
+- solid state disk(ssd): much faster than normal disk
+
+![image](resources/ssd.png)
+
+- cpu-memory-gap
+
+![image](resources/cpu-memory-gap.png)
+
+### Locality of reference
+
+- **principle** programs tend to use data and instructions with addresses near or equal to those they have used recently
+
+### Caching in memory hierarchy
+
+![image](resources/memory-hierarchy.png)
