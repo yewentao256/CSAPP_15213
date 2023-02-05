@@ -544,7 +544,7 @@ In order to making instructions run smoothly. We introduce the **branch predict*
 - Don't return a pointer pointing at a local variable
 - `int *a;` when `a + 1`, address of a actually add `sizeof(int) * 1 = 4`
 
-## 6. Memory Hierarchy
+## 6. Memory
 
 ### Storage technologies and trends
 
@@ -597,3 +597,86 @@ Note: this is not the modern design, which use point to point connection instead
 ### Caching in memory hierarchy
 
 ![image](resources/memory-hierarchy.png)
+
+### Cache memory organization and operation
+
+- general cache organization
+
+![image](resources/cache-organization.png)
+
+`cache_size = S * E * B bytes`
+
+- cache read
+
+![image](resources/cache-read.png)
+
+1. locate **set**
+2. check all lines in set to match **tag**
+3. **tag** matches and **valid** is true: **hit**
+4. locate data by **offset**
+
+Note: if not match, old line is **evicted and replaced**
+
+- simple example
+
+![image](resources/cache-example.png)
+
+When there comes a `8 [1000]`, it will miss, and set 0 is evicted
+
+![image](resources/cache-example-2.png)
+
+And when there comes a `0 [0000]`, it will miss again
+
+![image](resources/cache-example-3.png)
+
+However, if we change the bits of lines(2-way associative), it will change.
+
+- block size: hyperparameter of memory system
+  - if too small: locality principle(easily use nearby bytes) is not used
+  - if too large: long time to evict memory
+
+- cache write
+  - write-hit
+    - `write-through`: write data in cache immediately to memory
+    - `write-back`: defer write until replacement of line(need a dirty bit in cache)
+  - write-miss
+    - `write-allocate`: load into cache first(good if more writes to the location follow. **Note**: a block in cache is large)
+    - `no-write-allocate`: write straight to memory
+  - a good model: `write-back` + `write-allocate`
+
+- intel core i7 cache hierarchy:
+
+![image](resources/i7-cache-hierarchy.png)
+  
+### Performance impact of caches
+
+- metrics
+  - `miss rate`: `misses / accesses`
+  - `hit time`: how much time used when hit(eg: 4 clock cycles for L1)
+  - `miss penalty`: how much time used when miss(eg: 50~200 cycles to fetch from memory)
+
+- memory mountain:
+
+![image](resources/memory-moutain.png)
+
+When stride increases(`for (int i = 0; i < limit; i += stride)`), **spatial locality** decreases (you are not accessing the data nearby).
+
+When size increases (array to visit is too large), **temporal locality** decreases (cache can't hold too much data).
+
+- example: matrix multiplication(considering `block_size = 32Bytes`, data type is `double` so normally it will miss every four iter)
+
+This is a normal pattern(2 loads, 0 stores):
+
+![image](resources/matrix-multiplication.png)
+
+This is another pattern(2 loads, 1 stores):
+
+![image](resources/matrix-multiplication-2.png)
+
+Although 1 stores in pattern 2, it doesn't matter(because of **write-back**, it's more flexible, you don't have to wait)
+
+- block matrix multiplication: use block to speed up
+
+**Warning**: maybe useful in efficiency(a little bit), quite useless in real project(non-readable code for your teammates)
+
+![image](resources/matrix-multiplication-3.png)
