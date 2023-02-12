@@ -680,3 +680,9 @@ Although 1 stores in pattern 2, it doesn't matter(because of **write-back**, it'
 **Warning**: maybe useful in efficiency(a little bit), quite useless in real project(non-readable code for your teammates)
 
 ![image](resources/matrix-multiplication-3.png)
+
+A specific example:
+
+![image](resources/cache-memory-block.png)
+
+We should handle 5&6 next to make use of the cache (`A[1][0]` miss, `A[1][1]` hit, `B[0][1]` hit, `B[1][1]` hit)

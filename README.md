@@ -114,7 +114,7 @@ Lectures:
 - [x] Lecture 09: Machine-Level Programming V: Advanced Topics
 - [x] Lecture 10: Program Optimization
 - [x] Lecture 11: The Memory Hierarchy
-- [ ] Lecture 12: Cache Memories
+- [x] Lecture 12: Cache Memories
 - [ ] Lecture 13: Linking
 - [ ] Lecture 14: Exceptional Control Flow: Exceptions and Processes
 - [ ] Lecture 15: Exceptional Control Flow: Signals and Nonlocal Jumps
@@ -136,8 +136,8 @@ Recitations(Optional):
 - [x] Recitation 3: Datalab and Data Representations
 - [x] Recitation 4: Bomb Lab
 - [x] Recitation 5: Attack Lab and Stacks
-- [ ] Recitation 6: C Review
-- [ ] Recitation 7: Cache Lab and Blocking
+- [x] Recitation 6: C Review
+- [x] Recitation 7: Cache Lab and Blocking
 - [ ] Recitation 8: Exam Review
 - [ ] Recitation 9: Shell Lab, Processes, and Signals, and I/O
 - [ ] Recitation 10: Virtual Memory
