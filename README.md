@@ -88,9 +88,14 @@ Done in 2023/1, see [attacklab-practice](attacklab/attacklab-practice.md) for mo
 
 Wanna try another attack? Do it by yourself! Try a new random attack, see [attacklab-real](attacklab/attacklab-real.md) for more details.
 
+### Cachelab
+
+In this lab, we will write a small C program that **simulates the behavior of a cache memory** and **optimize a small matrix transpose function**.
+
+Done in 2023/2, see [cachelab](cachelab/cachelab.md) for more details.
+
 ### The rest of lab
 
-- [ ] cachelab
 - [ ] shelllab
 - [ ] malloclab
 - [ ] proxylab
