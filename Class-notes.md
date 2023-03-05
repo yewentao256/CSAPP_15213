@@ -686,3 +686,291 @@ A specific example:
 ![image](resources/cache-memory-block.png)
 
 We should handle 5&6 next to make use of the cache (`A[1][0]` miss, `A[1][1]` hit, `B[0][1]` hit, `B[1][1]` hit)
+
+## 7. Linking
+
+### static linking
+
+![image](resources/static-linking.png)
+
+- **cpp**: c pre processor
+- **cc1**: compiler
+- **as**: assembler as
+- Note: separate compile and then put it together
+  - Modularity: well organized
+  - Efficiency: just need to compile just some of the content
+
+### Three kinds of object files
+
+- relocate object file(`.o` file)
+  - each `.o` is exactly from one `.c` file
+- executable object file(`.out` file)
+- shared object file(`.so` file)
+  - can be loaded into memory and linked dynamically, at either load time or run-time
+  - called **Dynamic Link Libraries**(DLL) by windows
+
+### ELF(Executable and Linkable Format)
+
+![image](resources/linking-ELF-file.png)
+
+- elf header: word size, byte ordering, file type(`.o`, `.so` etc)
+- segment header table: page size, virtual address, memory sections, segment sizes.
+- `.text`: the code
+- `.rodata`: read only data(jump tables...)
+- `.data`: initialized global data
+- `.bss`: uninitialized global data, "better saved space", occupies no space
+- `.symtab`: symbol table
+- `.rel .text`: relocation info for `.text`, instructions for modifying
+- `.rel .data`: relocation info for `.data`
+- `.debug`: info for symbolic debugging(`gcc -g`)
+- Section header table: offsets and sizes of each section
+
+Note: `local static variable` is stored in `.bss` or `.data`
+
+### Linker Symbols
+
+- global symbols
+  - can be referenced by other modules, `non-static` functions or `non-static` global variables
+- external symbols
+  - global symbols that are referenced by a module but defined by some other modules
+- local symbols
+  - defined and referenced by a module itself
+  - **static** C functions and **static** global variables
+  - **not local program variables(on the stack)**
+
+### What do linkers do?
+
+- step1: Symbol solution
+  - symbol definitions are stored in object file(by assembler) in `symbol table`(array of struct, including name, size and its location)
+  - linker make sure each symbol has exactly one definition
+
+- step2: Relocation
+  - merge separate code and data sections into single sections
+  - relocate symbols to absolute memory locations
+  - update references to these symbols
+
+- Example step1
+
+![image](resources/linking-symbol-resolution.png)
+
+- Example step2
+
+![image](resources/linking-relocation.png)
+
+Relocation entries: compiler doesn't know the location of global variable or functions, so it leaves an entry (**offset** actually) for linker to use
+
+![image](resources/linking-relocation-entries.png)
+
+After relocation:
+
+![image](resources/linking-relocation-text.png)
+
+Notice that variable is placed by **absolute address** and function is placed by `PC-relative addressing`
+
+### Linking puzzle
+
+strong and weak symbols to solve duplicate symbol
+
+![image](resources/linking-strong-symbol.png)
+
+Three principles of compiler:
+
+- Choose strong symbol
+- multiple strong symbols are not allowed.
+- If there are only multiple weak symbols, pick an arbitrary one. (`-fno-common` to solve arbitrary pick and avoid some errors)
+
+Some linking puzzles:
+
+![image](resources/linking-puzzle.png)
+
+Explanation of case 2 and 3: the compiler thinks it is `double` in separate compilation, but it may be `int` in memory location.
+
+So we should avoid global variables if we can.
+
+Otherwise:
+
+- use `static` (make it local symbol)
+- initialize the global variable
+- use `extern` if you refer an external global variable
+
+### Linking in Memory
+
+![image](resources/linking-memory.png)
+
+**brk**: shows the size of **heap**, when using `malloc`, you are adjusting `brk`
+
+### Packing commonly used functions (Library)
+
+#### Static Library
+
+**static libraries**(`.a` archive files) -- old-fashioned solution
+
+![image](resources/linking-static-library.png)
+
+- Concatenate related relocatable object files (.o files) into a single file(an `archive`)
+- Allows incremental updates
+- Example: `libc.a`(C standard library) -- 4.6MB archive of 1496 object files
+- When used, can just choose to pick one `.o` from an archive, eg.: `printf.o` from `libc.a`
+
+- Linker's algorithm for scanning
+
+1. scan `.o` and `.a` files in the **command line order**, keeps a `unresolved references list`
+2. as each new `.o` or `.a` file is encountered, try to resolve each unresolved reference in the `unresolved references list`
+3. error if any entries in the unresolved list at the end of scan.
+4. So, the command line order matters
+
+![image](resources/linking-static-library-2.png)
+
+Here `libtest.o` calls a function defined in `-lmine`, it's ok in the first order, but it can't find it in the reverse order.
+
+#### Shared Library
+
+**shared libraries** (`.so` file) -- modern solution
+
+- dynamic linking at **load-time**:
+
+![image](resources/linking-shared-library.png)
+
+- dynamic linking at **run-time** by `dlopen`, `dlsym` etc
+
+### Library interpositioning
+
+Allow programmers to **intercept** calls to arbitrary functions, so we can print more information of func calls like `malloc` or do something extra.
+
+- interpositioning in **compile** stage
+
+```c
+void *mymalloc(size_t size)
+{
+  void *ptr = malloc(size);   // call the real malloc
+  printf("malloc(%d) = %p\n", (int)size, ptr);
+  return ptr;
+}
+
+// our own malloc.h
+#define malloc(size)  mymalloc(size)
+#define free(ptr)     myfree(ptr)
+```
+
+then `gcc -I. -o myprog myprog.c mymalloc.c`, `-I.` means find header file first in current work directory
+
+- interpositioning in **linking** stage
+
+```c
+void *__real_malloc(size_t size);
+
+// wrap function
+void *__wrap_malloc(size_t size)
+{
+  void *ptr = *__real_malloc(size);    // call for real malloc function
+  printf("malloc(%d) = %p\n", (int)size, ptr);
+  return ptr;
+}
+```
+
+then `gcc -Wl,--wrap,malloc -Wl,--wrap,free -o intl int.o mymalloc.o`
+
+`-Wl,--wrap,malloc` tells compiler that when programmer uses `malloc`, it calls for `__wrap_malloc`, and the `__real_malloc` calls for `malloc` provided by standard library.
+
+- interpositioning in **runtime**
+
+```c
+/* malloc wrapper function */
+void *malloc(size_t size)
+{
+    void *(*mallocp)(size_t size);
+    char *error;
+
+    mallocp = dlsym(RTLD_NEXT, "malloc"); /* Get address of libc malloc */ 
+    if ((error = dlerror()) != NULL) { 
+        fputs(error, stderr);
+        exit(1);
+    }
+    char *ptr = mallocp(size); /* Call libc malloc */
+    printf("malloc(%d) = %p\n", (int)size, ptr);
+    return ptr;
+}
+```
+
+when runs the program, use `LD_PRELOAD="./mymalloc.so" ./intr`
+
+**LD_PRELOAD** environment variable tells the dynamic linker to resolve unresolved refs by looking in `mymalloc.so` first
+
+## 8. Exceptional Control Flow
+
+### Control Flow
+
+- **program state**
+  - jumps and branches
+  - calls and return
+
+- **system state**: exceptional control flow(ECF)
+  - exceptions (low level)
+  - process context switch: OS software + hardware timer
+  - signals: OS software
+  - non-local jumps: C runtime library
+
+### Exceptions
+
+- An exception is a transfer of control to OS kernel in response to some event(eg: `control-c`)
+
+![image](resources/exceptions.png)
+
+- There is an exception table and corresponding handler
+
+![image](resources/exception-table.png)
+
+- Asynchronous exceptions(Interrupts): eg--Timer interrupt
+- Synchronous exceptions: caused by an instruction
+  - trap: intentional, eg -- **system calls**(like read, open, fork, kill etc)
+  - fault: unintentional, eg -- page fault(recoverable), protection fault(unrecoverable)
+  - abort: unintentional and unrecoverable, eg -- illegal instruction
+
+- example of fault
+
+![image](resources/fault-example.png)
+
+here the OS sends **SIGSEGV** signal to user process, and process exits with `segment fault`
+
+### Processes
+
+- A process is an instance of running program
+- two key abstractions
+  - **logical control flow**: program seems to have exclusive use of CPU, provided by kernel mechanism called `context switching`(saved register and switch to another process). Note: **physical control flow** is the level of instructions.
+  - **private address space**: program seems to have exclusive use of main memory, provided by kernel mechanism called `virtual memory`
+
+- concurrent process(one single core)
+
+![image](resources/concurrent-process.png)
+
+**concurrent**: flows overlap in time -- A & B, A & C
+
+**sequential**: otherwise -- B & C
+
+- context switch
+
+![image](resources/context-switch.png)
+
+### Process Control
+
+- `pid = fork();` to create a child process (Note: always check the pid)
+- Child is almost identical to parent:
+  - Child get an identical (but separate) copy of parent's virtual address space
+  - identical copies of parent's open file descriptors
+  - **different** PID
+
+- fork example
+
+![image](resources/fork-example.png)
+
+Note that `fork()` calls once, but return twice (one in parent, one in child)
+
+![image](resources/fork-example-2.png)
+
+- reap child process
+  - When process terminates, it still consumes system resources (`zombie process`)
+  - parent terminate child (`wait`/`waitpid`) and kernel delete zombie process
+  - if parent does nothing, **init process(pid=1)** will reap the child.
+
+- `execve`: loading and running programs
+  - different from `process`, it has different codes to run
