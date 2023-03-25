@@ -898,7 +898,7 @@ when runs the program, use `LD_PRELOAD="./mymalloc.so" ./intr`
 
 ## 8. Exceptional Control Flow
 
-### Control Flow
+### 8.1 Control Flow
 
 - **program state**
   - jumps and branches
@@ -910,7 +910,7 @@ when runs the program, use `LD_PRELOAD="./mymalloc.so" ./intr`
   - signals: OS software
   - non-local jumps: C runtime library
 
-### Exceptions
+### 8.2 Exceptions
 
 - An exception is a transfer of control to OS kernel in response to some event(eg: `control-c`)
 
@@ -932,7 +932,9 @@ when runs the program, use `LD_PRELOAD="./mymalloc.so" ./intr`
 
 here the OS sends **SIGSEGV** signal to user process, and process exits with `segment fault`
 
-### Processes
+### 8.3 Processes
+
+#### Introduction
 
 - A process is an instance of running program
 - two key abstractions
@@ -951,7 +953,7 @@ here the OS sends **SIGSEGV** signal to user process, and process exits with `se
 
 ![image](resources/context-switch.png)
 
-### Process Control
+#### Process Control
 
 - `pid = fork();` to create a child process (Note: always check the pid)
 - Child is almost identical to parent:
@@ -974,3 +976,97 @@ Note that `fork()` calls once, but return twice (one in parent, one in child)
 
 - `execve`: loading and running programs
   - different from `process`, it has different codes to run
+
+### 8.4 Shells
+
+linux process hierarchy
+
+![image](resources/linux-process-hierarchy.png)
+
+**login shell**: user interface, eg: `ls`
+
+A **shell** is an application program (a process) that runs user programs
+
+Note that `waitpid` is used when using **background job**
+
+If no signals, the background job will become **zombies**
+
+### 8.5 Signals
+
+#### Basic introduction
+
+A **signal** is a message that notifies a process that an event has occurred
+
+![image](resources/signals.png)
+
+**Sending signals**: **kernel** sends/delivers a signal to a destination process
+
+**Receiving signals**: destination process **receives** a signal when it is forced by the kernel to react to the delivery of the signal. Some possible ways to react:
+
+- **ignore**
+- **terminate**(optional `core dump`--save the memory state or something to a file for debugging)
+- **catch** and do something by **signal handler** (then to an asynchronous interrupt)
+
+**Pending signal**: a signal is **pending** if sent but not yet received. **at most one pending signal** since signals are not queued
+
+**Block signal**: a process can **block** the receipt of certain signals
+
+**Process group**:
+
+![image](resources/process-group.png)
+
+example of process group: `bin/kill`
+
+![image](resources/process-group-kill.png)
+
+example of `ctrl-c`(**SIGINT**) and `ctrl-z`(suspend a process by sending **SIGTSTP**, putting the process into **background** and **stop running**):
+
+![image](resources/ctrl-c-z-example.png)
+
+**STAT**:
+
+- first letter: `S`: sleeping, `T`: stopped, `R`: running, `Z`: zombie
+- second letter: `s`: session leader, `+`: foreground process group
+
+**signal handling example**:
+
+![image](resources/signal-handling-example.png)
+
+signal handler as concurrent flow:
+
+![image](resources/signal-handler-concurrent-flow.png)
+
+and handler can be interrupted by other handlers(nested handlers):
+
+![image](resources/nested-handlers.png)
+
+The ways to temporarily block signal: `Sigprocmask`
+
+![image](resources/sigprocmask.png)
+
+#### Write safe handlers
+
+**async-signal-safe**: reentrant(eg: all variables stored on stack) or non-interruptible by signals.
+
+- keep your handlers as simple as possible (eg: set flag and return)
+- call only async-signal-safe functions in your handler(`printf`, `malloc`, `exit` are not safe!)
+- save and restore `errno` on entry and exit (so other handlers don't overwrite)
+- protect access to shared data structure(so avoid concurrent issue)
+- declare global variables as **volatile**(to prevent compiler from storing them in register, only in memory)
+- declare global flag as `volatile sig_atomic_t`(`sig_atomic_t` is a safe type)
+
+why is `printf` unsafe? It has a lock, if one thread requires a lock, and before release it, it's interrupted and the handler wants to `printf` again --- dead lock.
+
+you can't use signals to count events, since pending signals **are not queued** (at most one pending signal of any type)
+
+`pause()` can be dangerous: `parent` sets `pid=0`, if `pid` is `0` and the signal comes between while and `pause()`, the `pause()` may wait forever.
+
+![image](resources/signal-pause.png)
+
+so here we can use `Sigsuspend`
+
+### Nonlocal jumps
+
+jump(return) from one function directly to another function without calling it.
+
+Using `setjmp`, `longjmp` here.

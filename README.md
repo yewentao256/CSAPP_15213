@@ -122,7 +122,7 @@ Lectures:
 - [x] Lecture 12: Cache Memories
 - [x] Lecture 13: Linking
 - [x] Lecture 14: Exceptional Control Flow: Exceptions and Processes
-- [ ] Lecture 15: Exceptional Control Flow: Signals and Nonlocal Jumps
+- [x] Lecture 15: Exceptional Control Flow: Signals and Nonlocal Jumps
 - [ ] Lecture 16: System Level I/O
 - [ ] Lecture 17: Virtual Memory: Concepts
 - [ ] Lecture 18: Virtual Memory: Systems
@@ -143,7 +143,7 @@ Recitations(Optional):
 - [x] Recitation 5: Attack Lab and Stacks
 - [x] Recitation 6: C Review
 - [x] Recitation 7: Cache Lab and Blocking
-- [ ] Recitation 8: Exam Review
+- [x] Recitation 8: Exam Review
 - [ ] Recitation 9: Shell Lab, Processes, and Signals, and I/O
 - [ ] Recitation 10: Virtual Memory
 - [ ] Recitation 11: Malloc Lab
