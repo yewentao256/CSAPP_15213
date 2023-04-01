@@ -123,7 +123,7 @@ Lectures:
 - [x] Lecture 13: Linking
 - [x] Lecture 14: Exceptional Control Flow: Exceptions and Processes
 - [x] Lecture 15: Exceptional Control Flow: Signals and Nonlocal Jumps
-- [ ] Lecture 16: System Level I/O
+- [x] Lecture 16: System Level I/O
 - [ ] Lecture 17: Virtual Memory: Concepts
 - [ ] Lecture 18: Virtual Memory: Systems
 - [ ] Lecture 19: Dynamic Memory Allocation: Basic Concepts

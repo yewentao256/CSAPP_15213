@@ -1067,6 +1067,62 @@ so here we can use `Sigsuspend`
 
 ### Nonlocal jumps
 
-jump(return) from one function directly to another function without calling it.
+jump(return) from one function directly to another function without calling it by using `setjmp`, `longjmp`.
 
-Using `setjmp`, `longjmp` here.
+## 9. System-Level I/O
+
+### 9.1 Unix I/O
+
+- regular file
+  - text files: ASCII or Unicode
+  - Binary files: .jpg image or object files... everything else
+
+- directories
+  - consists of an array of links
+  - tree hierarchy
+
+- Note: Do not call system call (`read`, `write`) too many times because of the cost of context switch unless you have to. Try read more bytes at one time
+
+### 9.2 RIO(robust I/O) package
+
+A robust wrapper for basic I/O.
+
+### 9.3 Metadata, sharing and redirection
+
+Metadata: maintained by kernel, accessed by `stat` and `fstat`
+
+How unix kernel represents open files:
+
+![image](resources/how-unix-kernel-represent-open-files.png)
+
+So file sharing makes sense:
+
+![image](resources/file-sharing.png)
+
+Note: `fork`, a child inherits its parent's open files
+
+![image](resources/inherits-file-table.png)
+
+Remember to call `close()` both in parent and child codes.
+
+I/O redirection by using `dup2`:
+
+![image](resources/io-redirection.png)
+
+![image](resources/io-redirection2.png)
+
+### 9.4 Standard I/O
+
+`fopen`, `fead`, `fflush` etc.
+
+Note: there is a buffer in standard IO to reduce multiple system calls
+
+![image](resources/buffer-io.png)
+
+### 9.5 Closing remarks
+
+![image](resources/io-system.png)\
+
+- standard IO is not suitable for network sockets(not designed for it)
+- standard IO functions are not **async-signal-safe** (unix IO functions are), and not appropriate for signal handlers
+- standard IO can help you decrease the number of system calls and handle short counts(`a = read() < 0`)
