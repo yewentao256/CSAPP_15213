@@ -94,9 +94,14 @@ In this lab, we will write a small C program that **simulates the behavior of a 
 
 Done in 2023/2, see [cachelab](cachelab/cachelab.md) for more details.
 
+### Shell lab
+
+In this lab, we will write a simple **Unix shell** that supports job control, including subprocess, signals, foreground background job, interrupts etc.
+
+Done in 2023/4, see [shlab](shelllab/shlab.md) for more details.
+
 ### The rest of lab
 
-- [ ] shelllab
 - [ ] malloclab
 - [ ] proxylab
 
@@ -144,7 +149,7 @@ Recitations(Optional):
 - [x] Recitation 6: C Review
 - [x] Recitation 7: Cache Lab and Blocking
 - [x] Recitation 8: Exam Review
-- [ ] Recitation 9: Shell Lab, Processes, and Signals, and I/O
+- [x] Recitation 9: Shell Lab, Processes, and Signals, and I/O
 - [ ] Recitation 10: Virtual Memory
 - [ ] Recitation 11: Malloc Lab
 - [ ] Recitation 12: Debugging Malloc Lab
