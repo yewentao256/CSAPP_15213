@@ -92,11 +92,109 @@ Wanna try another attack? Do it by yourself! Try a new random attack, see [attac
 
 In this lab, we will write a small C program that **simulates the behavior of a cache memory** and **optimize a small matrix transpose function**.
 
+There are code like:
+
+```c
+void access_cache(unsigned long address) {
+  unsigned int tag = address >> (s + b);
+  int s_index = address >> b & ((1 << s) - 1);  // (1 << s)-1 for %
+  int eviction_index = -1, max_counter = -1;
+  int need_evict = 1;
+
+  // first loop to see whether there is a match, or cold start
+  for (size_t i = 0; i < E; i++) {
+    if (sets[s_index].lines[i].valid) {
+      // valid, compare tag
+      if (sets[s_index].lines[i].tag == tag) {
+        // hit ...
+      } else {
+        continue;
+      }
+    } else {
+      // cold start ...
+    }
+  }
+
+  if (need_evict) {
+    // ...
+  }
+}
+```
+
 Done in 2023/2, see [cachelab](cachelab/cachelab.md) for more details.
 
 ### Shell lab
 
 In this lab, we will write a simple **Unix shell** that supports job control, including subprocess, signals, foreground background job, interrupts etc.
+
+There are code like:
+
+```c
+void eval(char *cmdline) {
+  // ...
+  if (!builtin_cmd(argv)) {
+    sigemptyset(&sig_mask_child);        /* set sigset all zero*/
+    sigaddset(&sig_mask_child, SIGCHLD); /* add SIGCHLD to sig set*/
+
+    sigprocmask(SIG_BLOCK, &sig_mask_child, &oldset);
+    if ((pid = fork()) == 0) {
+      if (setpgid(0, 0) == -1) {
+        perror("setpgid");
+        exit(EXIT_FAILURE);
+      }
+      sigprocmask(SIG_SETMASK, &oldset, NULL);
+      if (execve(argv[0], argv, environ) == -1) {
+        printf("%s: Command not found \n", argv[0]);
+        exit(0);
+      }
+    } else {
+      /* parrent executes here */
+      addjob(jobs, pid, bg == 1 ? BG : FG, cmdline);
+
+      /* recover from blocking signal for parent */
+      sigprocmask(SIG_SETMASK, &oldset, NULL);
+
+      if (!bg) {
+        waitfg(pid);
+      } else {
+        printf("[%d] (%d) %s", pid2jid(pid), pid, cmdline);
+      }
+    }
+  }
+}
+
+void sigchld_handler(int sig) {
+  pid_t pid;
+  int status;
+  struct job_t *job;
+
+  sigset_t mask_all, prev_all;
+  sigfillset(&mask_all);
+
+  while ((pid = waitpid(-1, &status, WNOHANG | WUNTRACED)) > 0) {
+    if (sigprocmask(SIG_BLOCK, &mask_all, &prev_all) < 0) {
+      perror("sigprocmask error");
+      exit(1);
+    }
+    job = getjobpid(jobs, pid);
+    if (WIFEXITED(status)) {
+      deletejob(jobs, pid);
+    } else if (WIFSIGNALED(status)) {
+      printf("Job [%d] (%d) terminated by signal %d\n", job->jid, pid,
+             WTERMSIG(status));
+      deletejob(jobs, pid);
+    } else if (WIFSTOPPED(status)) {
+      printf("Job [%d] (%d) stopped by signal %d\n", job->jid, pid,
+             WSTOPSIG(status));
+      job->state = ST;
+    }
+    if (sigprocmask(SIG_SETMASK, &prev_all, NULL) < 0) {
+      perror("sigprocmask error");
+      exit(1);
+    }
+  }
+}
+```
 
 Done in 2023/4, see [shlab](shelllab/shlab.md) for more details.
 
@@ -129,7 +227,7 @@ Lectures:
 - [x] Lecture 14: Exceptional Control Flow: Exceptions and Processes
 - [x] Lecture 15: Exceptional Control Flow: Signals and Nonlocal Jumps
 - [x] Lecture 16: System Level I/O
-- [ ] Lecture 17: Virtual Memory: Concepts
+- [x] Lecture 17: Virtual Memory: Concepts
 - [ ] Lecture 18: Virtual Memory: Systems
 - [ ] Lecture 19: Dynamic Memory Allocation: Basic Concepts
 - [ ] Lecture 20: Dynamic Memory Allocation: Advanced Concepts

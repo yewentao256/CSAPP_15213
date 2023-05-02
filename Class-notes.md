@@ -1126,3 +1126,103 @@ Note: there is a buffer in standard IO to reduce multiple system calls
 - standard IO is not suitable for network sockets(not designed for it)
 - standard IO functions are not **async-signal-safe** (unix IO functions are), and not appropriate for signal handlers
 - standard IO can help you decrease the number of system calls and handle short counts(`a = read() < 0`)
+
+## 10. Virtual Memory
+
+![image](resources/virtual-memory.png)
+
+MMU: Memory Management Unit, does address translation
+
+VM can help:
+
+- use main memory efficiently(cache)
+- simplify memory management
+- isolate address space(to protect privileged kernel and code)
+
+### 10.1 VM as a tool for caching
+
+![image](resources/VM-for-caching.png)
+
+**Virtual memory** is an array of N contiguous bytes, the content of the array on disk are cached in **physical memory(DRAM Cache)**
+
+![image](resources/page-table.png)
+
+**Page table** is an array of PTEs(page table entries) that maps virtual pages to physical pages.
+
+![image](resources/page-fault.png)
+
+![image](resources/page-fault-2.png)
+
+**page miss** causes page fault(an exception), page fault handler selects a victim to be evicted(here VP4), then put VP3 to the place of VP4
+
+![image](resources/allocating-page.png)
+
+Here we allocate a new page(VP5).
+
+The virtual memory here seems inefficient, but it works because of locality. If `**working set(the active pages program tend to access)** < main memory size`, good performance. Otherwise, since we need to swap pages, performance are down.
+
+### 10.2 VM as a tool for memory management
+
+![image](resources/VM-for-memory-management.png)
+
+Key idea: **each process has its own virtual address space**
+
+they can also share code and data(read-only)
+
+![image](resources/VM-for-linking-and-loading.png)
+
+It can also simplify linking and loading:
+
+- each program has similar virtual address space. Code, data and heap always start at the same address.
+
+### 10.3 VM as a tool for memory protection
+
+![image](resources/VM-for-memory-protection.png)
+
+Extend PTEs with permission bits, MMU checks these bits on each access.
+
+### 10.4 Address translation
+
+![image](resources/address-translation.png)
+
+Just like a fully-associated cache system. Started by a virtual memory address, and finally get the physical memory address.
+
+Note that offsets are the same.
+
+![image](resources/address-translation-process.png)
+
+The process of page hit. Note for `2~3`: MMU fetches PTE from page table in memory
+
+![image](resources/address-translation-page-fault.png)
+
+The process of page fault. Note for `7`: Handler returns to original process, restarting faulting instruction.
+
+### 10.5 Speeding up Translation by TLB
+
+Translation Lookaside buffer(TLB): a small set-associative hardware cache in MMU, contains complete page table entries for small number of pages.
+
+![image](resources/address-translation-TLB.png)
+
+TLB-hit:
+
+![image](resources/TLB-hit.png)
+
+TLB-miss:
+
+![image](resources/TLB-miss.png)
+
+### 10.6 Multi-Level Page Table
+
+One-Level page table can take up a lot of space.
+
+Eg: 32 bit-environment, 4 KB(2^12) page size, we should have `2^32 * 2^-12 = 2^20` pages, 4-byte PTE, totally `2^22 bytes = 4MB` for one process. 1000 process = 4GB
+
+Eg2: 64 bit-environment, 4KB page size, 48-bit address space(24 bits reserved), we should have `2^36` pages, 8-byte PTE, totally `2^39 bytes = 512GB` page table!
+
+Note: page size means dividing physical memory into several blocks, the size of block is page size. PTE is for offset in a page(and some privileged bits).
+
+![image](resources/multi-level-page-table.png)
+
+The way to translate multi-level-page-table:
+
+![image](resources/translate-multi-level-page-table.png)
