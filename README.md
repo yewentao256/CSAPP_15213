@@ -228,7 +228,7 @@ Lectures:
 - [x] Lecture 15: Exceptional Control Flow: Signals and Nonlocal Jumps
 - [x] Lecture 16: System Level I/O
 - [x] Lecture 17: Virtual Memory: Concepts
-- [ ] Lecture 18: Virtual Memory: Systems
+- [x] Lecture 18: Virtual Memory: Systems
 - [ ] Lecture 19: Dynamic Memory Allocation: Basic Concepts
 - [ ] Lecture 20: Dynamic Memory Allocation: Advanced Concepts
 - [ ] Lecture 21: Network Programming: Part 1

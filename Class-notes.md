@@ -1226,3 +1226,31 @@ Note: page size means dividing physical memory into several blocks, the size of 
 The way to translate multi-level-page-table:
 
 ![image](resources/translate-multi-level-page-table.png)
+
+### 10.7 Intel Core i7 Memory System
+
+![image](resources/intel-i7.png)
+
+### 10.8 Memory Mapping
+
+![image](resources/memory-mapping.png)
+
+Mapping memory to file.
+
+![image](resources/copy-on-write.png)
+
+Private Copy-on-write(COW) objects.
+
+And Note that this is why `fork` can be efficient. It doesn't really copy data that can be shared by two processes.
+
+![image](resources/linux-execve.png)
+
+The process of **execve**(load and run a new program in the current process):
+
+- free `vm_area` and page table for old areas
+- create `vm_area` and page table for new areas
+- set PC to entry point in `.text`
+
+Using memory mapping a lot here.
+
+**mmap**: allows you to do memory mapping like kernel does.
