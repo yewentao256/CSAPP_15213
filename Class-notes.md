@@ -1199,6 +1199,8 @@ The process of page fault. Note for `7`: Handler returns to original process, re
 
 ### 10.5 Speeding up Translation by TLB
 
+#### Basic concepts
+
 Translation Lookaside buffer(TLB): a small set-associative hardware cache in MMU, contains complete page table entries for small number of pages.
 
 ![image](resources/address-translation-TLB.png)
@@ -1210,6 +1212,21 @@ TLB-hit:
 TLB-miss:
 
 ![image](resources/TLB-miss.png)
+
+#### Example for TLB
+
+1MB of virtual memory, 4KB page size, 256KB of physical memory, TLB: 8 entries, 2-way set associative
+
+- How many bits are needed to represent virtual address space? 20 (`2^20 = 1MB`)
+- How many bits are needed to represent physical address space? 18
+- How many bits are needed to represent offset?   12 (`2^12 = 4KB`)
+- How many bits are needed to represent VPN(virtual page number)?  8
+- How many bits are in the TLB index?  2 (since we have four sets totally)
+- How many bits are in the TLB Tag?    6 (just the rest)
+
+Another example:
+
+![image](resources/address-translation-TLB-example.png)
 
 ### 10.6 Multi-Level Page Table
 
