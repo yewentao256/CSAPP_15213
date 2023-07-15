@@ -1271,3 +1271,70 @@ The process of **execve**(load and run a new program in the current process):
 Using memory mapping a lot here.
 
 **mmap**: allows you to do memory mapping like kernel does.
+
+## 11. Dynamic Memory Allocation
+
+![image](resources/memory-heap.png)
+
+Require virtual memory by using ways such as `malloc`(to Heap, maintained by **blocks**).
+
+Allocators:
+
+- explicit allocator: C `malloc` and `free`
+- implicit allocator: java allocates memory but do not need free (garbage collection)
+
+Note: in this lecture, the unit of malloc is `word`（4 bytes）
+
+Example:
+
+![image](resources/malloc-example.png)
+
+Fragmentation:
+
+- **Internal fragmentation**: Blocks have to be aligned, when payload is smaller than one single block, this happens.
+- **External fragmentation**: As the picture shows above, the fragmentation appears.
+
+Q: How much to free? (since we only have a pointer passed to the `free` function?)
+
+![image](resources/how-much-to-free.png)
+
+A: by using a header
+
+Q: How to keep track of free blocks?
+
+A: Implicit list to links all of (headers of) the blocks. **Additional bit for allocation status**. Trick: if blocks are aligned, some low-order bits are always zero(4 bytes, 1000...)
+
+![image](resources/addtional-bit-for-malloc-status.png)
+
+example:
+
+![image](resources/implicit-list-malloc.png)
+
+final block(size 0 / status 1) to be the end of search.
+
+Q: ways to use implicit list?(**placement policy**)
+
+A:
+
+- **first fit**: scan from the beginning
+- **next fit**: scan starts from the last malloc(fast but maybe more fragments)
+- **best fit**: search all of the list and find the best malloc to reduce fragments
+
+Q: How to free by using implicit list?
+
+A: Coalescing
+
+![image](resources/coalescing.png)
+
+But in this way we couldn't coalesce the block we used before.
+
+So we can use **boundary tags**(constant free even with coalescing):
+
+![image](resources/boundary-tags.png)
+
+Note: **boundary tags** can be also optimized. For example, we can add additional status bit to represent whether the previous block needs to coalesce.
+
+**Coalescing policy**:
+
+- immediate coalescing: coalesce each time `free` is called
+- deferred coalescing: coalesce as you scan the list for `malloc` or external fragmentation reaches some threshold. 
