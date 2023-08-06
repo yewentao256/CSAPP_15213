@@ -1274,6 +1274,8 @@ Using memory mapping a lot here.
 
 ## 11. Dynamic Memory Allocation
 
+### 11.1 Basic concepts
+
 ![image](resources/memory-heap.png)
 
 Require virtual memory by using ways such as `malloc`(to Heap, maintained by **blocks**).
@@ -1299,6 +1301,8 @@ Q: How much to free? (since we only have a pointer passed to the `free` function
 ![image](resources/how-much-to-free.png)
 
 A: by using a header
+
+### 11.2 Implicit list
 
 Q: How to keep track of free blocks?
 
@@ -1337,4 +1341,81 @@ Note: **boundary tags** can be also optimized. For example, we can add additiona
 **Coalescing policy**:
 
 - immediate coalescing: coalesce each time `free` is called
-- deferred coalescing: coalesce as you scan the list for `malloc` or external fragmentation reaches some threshold. 
+- deferred coalescing: coalesce as you scan the list for `malloc` or external fragmentation reaches some threshold.
+
+### 11.3 Explicit free lists
+
+![image](resources/explicit-free-list.png)
+
+Maintain list of **free** blocks. That's why we can use payload area.
+
+![image](resources/explicit-free-list-order.png)
+
+Note that blocks can be in any order.
+
+![image](resources/explicit-free-list-allocate.png)
+
+It's easy to allocate now.
+
+For free, tow policies:
+
+- LIFO(last-in-first-out)
+  - insert freed block at the beginning of the list
+  - simple and constant time, more fragmentation
+
+- Address-ordered policy
+  - make sure `addr(prev) < addr(curr) < addr(next)`
+  - requires search but less fragmentation.
+
+LIFO eg:
+
+![image](resources/explicit-free-list-free.png)
+
+LIFO eg2: with coalesce(remember to use boundary tag)
+
+![image](resources/explicit-free-list-free-2.png)
+
+LIFO eg3: with coalesce
+
+![image](resources/explicit-free-list-free-3.png)
+
+Explicit list only care for **free blocks** instead of **all blocks**, much faster when memory is nearly full.
+
+### 11.4 Segregated free lists
+
+Each **size class** of blocks has its own free list.
+
+![image](resources/segregated-list.png)
+
+separate classes for small size; two-power size class for larger sizes.
+
+- Higher throughput(log time for power-of-two size classes)
+- Better memory utilization: approximates a best-fit search.
+
+### 11.5 Garbage collection
+
+Automatic garbage collection: application never has to free.
+
+Classical GC algorithms
+
+- Mark-and-sweep collection: introduce later
+- Reference-counting: reference count to indicate whether an object can be freed.
+- Copying collection: copy all of used object in A to B, then free A. Not used too much
+- Generational Collectors: based on lifetimes
+
+Mark-and-sweep:
+
+![image](resources/mark-and-sweep.png)
+
+**root**: Locations not in the heap and contain pointers into the heap(e.g. registers, global variables)
+**reachable**: a path from root to node.
+**garbage**: non-reachable node.
+
+When out of space:
+
+1. **Mark**: start at roots and set **mark**(extra mark bit) on reachable node recursively.
+2. **Sweep**: scan all blocks and free blocks that are not marked
+
+![image](resources/mark-and-sweep-eg.png)
+
+Note: mark-and-sweep in C is conservative, you don't know a large number is **a pointer or a long type**. So we can use a balanced tree to keep track of all allocated blocks.
