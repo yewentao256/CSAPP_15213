@@ -249,7 +249,7 @@ Recitations(Optional):
 - [x] Recitation 8: Exam Review
 - [x] Recitation 9: Shell Lab, Processes, and Signals, and I/O
 - [x] Recitation 10: Virtual Memory
-- [ ] Recitation 11: Malloc Lab
+- [x] Recitation 11: Malloc Lab
 - [ ] Recitation 12: Debugging Malloc Lab
 - [ ] Recitation 13: Proxy Lab
 - [ ] Recitation 14: Synchronization

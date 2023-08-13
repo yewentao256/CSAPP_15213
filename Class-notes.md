@@ -1419,3 +1419,9 @@ When out of space:
 ![image](resources/mark-and-sweep-eg.png)
 
 Note: mark-and-sweep in C is conservative, you don't know a large number is **a pointer or a long type**. So we can use a balanced tree to keep track of all allocated blocks.
+
+### 11.6 Recitation
+
+Malloc Lab is out!
+
+Using **gprof** is a good way to analyze efficiency.
