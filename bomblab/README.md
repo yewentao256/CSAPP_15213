@@ -801,3 +801,9 @@ ionefg
 4 3 2 1 6 5
 22
 ```
+
+## Extra
+
+Wanna try another bomb? Do it by yourself in folder `real_test`!
+
+The answer: [bomblab-real](bomblab-real.md)
