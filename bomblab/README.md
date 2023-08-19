@@ -1,6 +1,17 @@
 # BombLab
 
-[TOC]
+- [BombLab](#bomblab)
+  - [Set up Environment](#set-up-environment)
+  - [Commands We usually use](#commands-we-usually-use)
+  - [Phase\_1](#phase_1)
+  - [Phase\_2](#phase_2)
+  - [Phase\_3](#phase_3)
+  - [phase\_4](#phase_4)
+  - [phase\_5(doing)](#phase_5doing)
+  - [Phase\_6](#phase_6)
+  - [Seems to be the end? secret\_phase](#seems-to-be-the-end-secret_phase)
+  - [The results for copy](#the-results-for-copy)
+  - [Extra](#extra)
 
 ## Set up Environment
 

@@ -1,5 +1,12 @@
 # Datalab
 
+- [Datalab](#datalab)
+  - [The answers of all the questions](#the-answers-of-all-the-questions)
+  - [How to launch](#how-to-launch)
+    - [Using a virtual machine](#using-a-virtual-machine)
+    - [Using docker(recommended)](#using-dockerrecommended)
+  - [How to test](#how-to-test)
+
 ## The answers of all the questions
 
 All in [bits.c](bits.c), also with my comments there

@@ -6,6 +6,17 @@ Learning About CSAPP-15213
 
 **Videos**: [https://scs.hosted.panopto.com/Panopto/Pages/Sessions/List.aspx#folderID=%22b96d90ae-9871-4fae-91e2-b1627b43e25e%22]
 
+- [CSAPP-15213](#csapp-15213)
+  - [Labs](#labs)
+    - [Datalab](#datalab)
+    - [Bomblab](#bomblab)
+    - [Attacklab](#attacklab)
+    - [Cachelab](#cachelab)
+    - [Shell lab](#shell-lab)
+    - [The rest of lab](#the-rest-of-lab)
+  - [Class Notes](#class-notes)
+  - [Learning Process](#learning-process)
+
 ## Labs
 
 Note: the questions can be quite hard, be patient and you'll figure it out!

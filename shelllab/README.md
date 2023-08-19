@@ -1,5 +1,28 @@
 # Shell Lab
 
+- [Shell Lab](#shell-lab)
+  - [Introduction](#introduction)
+  - [How to launch(Using docker)](#how-to-launchusing-docker)
+  - [How to validate](#how-to-validate)
+  - [Trace 01](#trace-01)
+  - [Trace 02](#trace-02)
+  - [Trace 03](#trace-03)
+  - [Trace 04](#trace-04)
+  - [Trace 05](#trace-05)
+  - [Trace 06](#trace-06)
+  - [Trace 07](#trace-07)
+  - [Trace 08](#trace-08)
+  - [Trace 09](#trace-09)
+  - [Trace 10](#trace-10)
+  - [Trace 11](#trace-11)
+  - [Trace 12](#trace-12)
+  - [Trace 13](#trace-13)
+  - [Trace 14](#trace-14)
+  - [Trace 15](#trace-15)
+  - [Trace16](#trace16)
+  - [Review](#review)
+  - [Appendix](#appendix)
+
 ## Introduction
 
 In this lab, we'll become more familiar with the concepts of process control and signal by writing a simple Unix shell program that supports job control.

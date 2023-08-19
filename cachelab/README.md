@@ -1,5 +1,18 @@
 # Cachelab
 
+- [Cachelab](#cachelab)
+  - [Introduction](#introduction)
+  - [How to launch(Using docker)](#how-to-launchusing-docker)
+  - [Part A: Writing a Cache Simulator](#part-a-writing-a-cache-simulator)
+    - [How to get command line options?](#how-to-get-command-line-options)
+    - [How to get content from files?](#how-to-get-content-from-files)
+    - [How to realize LRU?](#how-to-realize-lru)
+    - [The answer](#the-answer)
+  - [Part B：Optimizing Matrix Transpose](#part-boptimizing-matrix-transpose)
+    - [32 \* 32](#32--32)
+    - [64 \* 64](#64--64)
+    - [61 \* 67](#61--67)
+
 ## Introduction
 
 In this lab, there are two parts:
