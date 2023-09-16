@@ -13,6 +13,7 @@ Learning About CSAPP-15213
     - [Attacklab](#attacklab)
     - [Cachelab](#cachelab)
     - [Shell lab](#shell-lab)
+    - [malloc lab](#malloc-lab)
     - [The rest of lab](#the-rest-of-lab)
   - [Class Notes](#class-notes)
   - [Learning Process](#learning-process)
@@ -43,7 +44,7 @@ int isAsciiDigit(int x) {
 }
 ```
 
-Done in 2022/12, see [datalab](datalab/datalab.md) for more details
+Done in 2022/12, see [datalab](datalab/README.md) for more details
 
 ### Bomblab
 
@@ -62,7 +63,7 @@ Here we can better understand the assembly and instructions, for example
 0x000400efb <+27>:    retq
 ```
 
-Done in 2022/12, see [bomblab-practice](bomblab/bomblab-practice.md) for more details.
+Done in 2022/12, see [bomblab-practice](bomblab/README.md) for more details.
 
 Wanna try another bomb? Do it by yourself! Try a new random bomb, see [bomblab-real](bomblab/bomblab-real.md) for more details.
 
@@ -97,7 +98,7 @@ we can make the program `jump` to another place we want.
 
 Done in 2023/1, see [attacklab-practice](attacklab/attacklab-practice.md) for more details.
 
-Wanna try another attack? Do it by yourself! Try a new random attack, see [attacklab-real](attacklab/attacklab-real.md) for more details.
+Wanna try another attack? Do it by yourself! Try a new random attack, see [attacklab-real](attacklab/README.md) for more details.
 
 ### Cachelab
 
@@ -132,7 +133,7 @@ void access_cache(unsigned long address) {
 }
 ```
 
-Done in 2023/2, see [cachelab](cachelab/cachelab.md) for more details.
+Done in 2023/2, see [cachelab](cachelab/README.md) for more details.
 
 ### Shell lab
 
@@ -141,39 +142,6 @@ In this lab, we will write a simple **Unix shell** that supports job control, in
 There are code like:
 
 ```c
-void eval(char *cmdline) {
-  // ...
-  if (!builtin_cmd(argv)) {
-    sigemptyset(&sig_mask_child);        /* set sigset all zero*/
-    sigaddset(&sig_mask_child, SIGCHLD); /* add SIGCHLD to sig set*/
-
-    sigprocmask(SIG_BLOCK, &sig_mask_child, &oldset);
-    if ((pid = fork()) == 0) {
-      if (setpgid(0, 0) == -1) {
-        perror("setpgid");
-        exit(EXIT_FAILURE);
-      }
-      sigprocmask(SIG_SETMASK, &oldset, NULL);
-      if (execve(argv[0], argv, environ) == -1) {
-        printf("%s: Command not found \n", argv[0]);
-        exit(0);
-      }
-    } else {
-      /* parrent executes here */
-      addjob(jobs, pid, bg == 1 ? BG : FG, cmdline);
-
-      /* recover from blocking signal for parent */
-      sigprocmask(SIG_SETMASK, &oldset, NULL);
-
-      if (!bg) {
-        waitfg(pid);
-      } else {
-        printf("[%d] (%d) %s", pid2jid(pid), pid, cmdline);
-      }
-    }
-  }
-}
-
 void sigchld_handler(int sig) {
   pid_t pid;
   int status;
@@ -207,11 +175,34 @@ void sigchld_handler(int sig) {
 }
 ```
 
-Done in 2023/4, see [shlab](shelllab/shlab.md) for more details.
+Done in 2023/4, see [shlab](shelllab/README.md) for more details.
+
+### malloc lab
+
+In this lab, we will implement our own versions of `malloc`, `free`, and `realloc`.
+
+There are code like:
+
+```c
+void *mm_malloc(size_t size) {
+  size = get_block_size(size);
+  Block *block = find_fit(size);
+  if (!block) {
+    expand_heap(size > EXPAND_HEAP_SIZE ? size : EXPAND_HEAP_SIZE);
+    block = find_fit(size);
+    if (!block) {
+      return NULL;
+    }
+  }
+  SET_ALLOCATED(block);
+  return (void *)((char *)block + sizeof(Block));  // return data to user
+}
+```
+
+Done in 2023/9, see [malloc_lab](malloclab/README.md) for more details.
 
 ### The rest of lab
 
-- [ ] malloclab
 - [ ] proxylab
 
 ## Class Notes
