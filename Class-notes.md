@@ -98,7 +98,11 @@
     - [11.4 Segregated free lists](#114-segregated-free-lists)
     - [11.5 Garbage collection](#115-garbage-collection)
     - [11.6 Recitation](#116-recitation)
-
+  - [12. Network Programming](#12-network-programming)
+    - [12.1 Basic Concepts](#121-basic-concepts)
+    - [12.2 Protocol](#122-protocol)
+    - [12.3 Domain names](#123-domain-names)
+    - [12.4 Connections](#124-connections)
 
 ## 1. Overview
 
@@ -1523,3 +1527,55 @@ Note: mark-and-sweep in C is conservative, you don't know a large number is **a 
 Malloc Lab is out!
 
 Using **gprof** is a good way to analyze efficiency.
+
+## 12. Network Programming
+
+### 12.1 Basic Concepts
+
+![image](resources/network-hardware-organization.png)
+
+In Linux, handling network is similar to handle a file (socket interface).
+
+Lowest Level: **Ethernet** Segment. eg: MAC address(00:16:ea:e3:54:e6)
+
+Next Level: Bridged Ethernet Segment
+
+![image](resources/network-briged-ethernet.png)
+
+Next Level: **internets** - connecting multiple LANs (local area network) through routers
+
+![image](resources/network-internets.png)
+
+### 12.2 Protocol
+
+We use **Protocol** to send bits across incompatible LANs and WANs (wide area network)
+
+![image](resources/network-data-encapsulation.png)
+
+**IP(Internet Protocol)**: basic naming scheme from host to host (doesn't know send for what process)
+
+**UDP(Unreliable Datagram Protocol)**: Uses IP to deliver **unreliable** datagram from process to process
+
+**TCP(Transmission Control Protocol)**: Uses IP to deliver **reliable** byte streams from process to process over connections.
+
+usage: TCP/IP or UDP/IP
+
+![image](resources/network-organization-of-application.png)
+
+### 12.3 Domain names
+
+![image](resources/network-domain-names.png)
+
+DNS (Domain Name System): Used for mapping between IP addresses and domain names. Note: mapping is multiple to multiple.
+
+### 12.4 Connections
+
+Connections features:
+
+- point to point: connects a pair of processes
+- full-duplex: data can flow in both directions
+- reliable
+
+A **socket** is an endpoint of connection
+
+A **port** identifies a process.
