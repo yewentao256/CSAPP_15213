@@ -233,7 +233,7 @@ Lectures:
 - [x] Lecture 18: Virtual Memory: Systems
 - [x] Lecture 19: Dynamic Memory Allocation: Basic Concepts
 - [x] Lecture 20: Dynamic Memory Allocation: Advanced Concepts
-- [ ] Lecture 21: Network Programming: Part 1
+- [x] Lecture 21: Network Programming: Part 1
 - [ ] Lecture 22: Network Programming: Part II
 - [ ] Lecture 23: Concurrent Programming
 - [ ] Lecture 24: Synchronization: Basics

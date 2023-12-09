@@ -1579,3 +1579,11 @@ Connections features:
 A **socket** is an endpoint of connection
 
 A **port** identifies a process.
+
+![image](resources/network-socket-pair.png)
+
+**socket pair**: to identify a connection.
+
+A client-server model:
+
+![image](resources/network-service-client-model.png)
