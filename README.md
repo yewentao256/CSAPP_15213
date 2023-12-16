@@ -234,7 +234,7 @@ Lectures:
 - [x] Lecture 19: Dynamic Memory Allocation: Basic Concepts
 - [x] Lecture 20: Dynamic Memory Allocation: Advanced Concepts
 - [x] Lecture 21: Network Programming: Part 1
-- [ ] Lecture 22: Network Programming: Part II
+- [x] Lecture 22: Network Programming: Part II
 - [ ] Lecture 23: Concurrent Programming
 - [ ] Lecture 24: Synchronization: Basics
 - [ ] Lecture 25: Synchronization: Advanced
@@ -252,7 +252,7 @@ Recitations(Optional):
 - [x] Recitation 9: Shell Lab, Processes, and Signals, and I/O
 - [x] Recitation 10: Virtual Memory
 - [x] Recitation 11: Malloc Lab
-- [ ] Recitation 12: Debugging Malloc Lab
+- [x] Recitation 12: Debugging Malloc Lab
 - [ ] Recitation 13: Proxy Lab
 - [ ] Recitation 14: Synchronization
 - [ ] Recitation 15: Exam review

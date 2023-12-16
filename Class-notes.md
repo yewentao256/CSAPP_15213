@@ -103,6 +103,10 @@
     - [12.2 Protocol](#122-protocol)
     - [12.3 Domain names](#123-domain-names)
     - [12.4 Connections](#124-connections)
+    - [12.5 HTTP](#125-http)
+    - [12.6 CGI](#126-cgi)
+  - [13. Concurrent Programming](#13-concurrent-programming)
+    - [13.1 Concurrent Servers](#131-concurrent-servers)
 
 ## 1. Overview
 
@@ -1587,3 +1591,33 @@ A **port** identifies a process.
 A client-server model:
 
 ![image](resources/network-service-client-model.png)
+
+### 12.5 HTTP
+
+HTTP: HyperText Transfer Protocol
+
+Content: a sequence of bytes with an associated **MIME(Multipurpose Internet Mail Extensions)**
+
+MIME eg: `text/html`, `image/png`
+
+URL: Universal Resource Locator
+
+### 12.6 CGI
+
+CGI: Common Gateway Interface
+
+Eg: `http://add.com/cgi-bin/adder?15213&18213` Here the `adder` is a CGI
+
+## 13. Concurrent Programming
+
+Classical problems: **Races**, **Deadlock**, **livelock/starvation/fairness**
+
+### 13.1 Concurrent Servers
+
+**Process-Based**: fork a new process to handle connections
+
+![image](resources/concurrent-process-based.png)
+
+**Event-Based**: use `i/o multiplexing` technique, non-block in one process
+
+**Thread-Based**: use multithreading in one process
