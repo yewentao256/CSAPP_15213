@@ -235,7 +235,7 @@ Lectures:
 - [x] Lecture 20: Dynamic Memory Allocation: Advanced Concepts
 - [x] Lecture 21: Network Programming: Part 1
 - [x] Lecture 22: Network Programming: Part II
-- [ ] Lecture 23: Concurrent Programming
+- [x] Lecture 23: Concurrent Programming
 - [ ] Lecture 24: Synchronization: Basics
 - [ ] Lecture 25: Synchronization: Advanced
 - [ ] Lecture 26: Thread-Level Parallelism

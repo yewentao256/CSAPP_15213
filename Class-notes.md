@@ -1621,3 +1621,14 @@ Classical problems: **Races**, **Deadlock**, **livelock/starvation/fairness**
 **Event-Based**: use `i/o multiplexing` technique, non-block in one process
 
 **Thread-Based**: use multithreading in one process
+
+![image](resources/concurrent-threads.png)
+
+Thread:
+
+- has its own logical control flow
+- shares the same code, data and kernel context
+- has its own stack for local variables (not protected from other threads)
+- State:
+  - Joinable: can be reaped and killed by other threads(default)
+  - Detached: Automatically be reaped on termination
