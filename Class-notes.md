@@ -105,6 +105,7 @@
     - [12.4 Connections](#124-connections)
     - [12.5 HTTP](#125-http)
     - [12.6 CGI](#126-cgi)
+    - [12.7 Proxy](#127-proxy)
   - [13. Concurrent Programming](#13-concurrent-programming)
     - [13.1 Concurrent Servers](#131-concurrent-servers)
 
@@ -1607,6 +1608,16 @@ URL: Universal Resource Locator
 CGI: Common Gateway Interface
 
 Eg: `http://add.com/cgi-bin/adder?15213&18213` Here the `adder` is a CGI
+
+### 12.7 Proxy
+
+![image](resources/network-proxy.png)
+
+Develop your own proxy:
+
+1. Sequential proxy: easy start
+2. Concurrent proxy: multi-threading
+3. Cache Web Objects: cache separate objects, using **LRU(Least Recently Used)** eviction.
 
 ## 13. Concurrent Programming
 

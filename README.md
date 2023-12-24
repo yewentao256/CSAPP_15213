@@ -236,7 +236,7 @@ Lectures:
 - [x] Lecture 21: Network Programming: Part 1
 - [x] Lecture 22: Network Programming: Part II
 - [x] Lecture 23: Concurrent Programming
-- [ ] Lecture 24: Synchronization: Basics
+- [x] Lecture 24: Synchronization: Basics
 - [ ] Lecture 25: Synchronization: Advanced
 - [ ] Lecture 26: Thread-Level Parallelism
 - [ ] Lecture 27: Future of Computing
@@ -253,6 +253,6 @@ Recitations(Optional):
 - [x] Recitation 10: Virtual Memory
 - [x] Recitation 11: Malloc Lab
 - [x] Recitation 12: Debugging Malloc Lab
-- [ ] Recitation 13: Proxy Lab
+- [x] Recitation 13: Proxy Lab
 - [ ] Recitation 14: Synchronization
 - [ ] Recitation 15: Exam review
