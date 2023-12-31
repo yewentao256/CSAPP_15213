@@ -108,6 +108,9 @@
     - [12.7 Proxy](#127-proxy)
   - [13. Concurrent Programming](#13-concurrent-programming)
     - [13.1 Concurrent Servers](#131-concurrent-servers)
+    - [13.2 Semaphores](#132-semaphores)
+    - [13.3 Prethreaded Concurrent server (thread pool)](#133-prethreaded-concurrent-server-thread-pool)
+    - [13.4 Thread Safe](#134-thread-safe)
 
 ## 1. Overview
 
@@ -1643,3 +1646,57 @@ Thread:
 - State:
   - Joinable: can be reaped and killed by other threads(default)
   - Detached: Automatically be reaped on termination
+
+### 13.2 Semaphores
+
+Non-negative global integer synchronization variable. Maintained by `P` and `V`
+
+```c++
+mutex = 1
+P(mutex)  // mutex -= 1
+// do something
+V(mutex)  // mutex += 1
+```
+
+Producer-Consumer Example
+
+```c++
+buffer[n]
+mutex = 1   // semaphore
+items = 0   // semaphore
+slots = n   // semaphore
+```
+
+Reader-Writer Example--First Reader: as long as there is a reader, writer should wait
+
+![image](resources/synchronization-first-readers.png)
+
+Note: `mutex` is only for `readcnt`
+
+### 13.3 Prethreaded Concurrent server (thread pool)
+
+![image](resources/synchronization-pool-server.png)
+
+Here, we do not need to create/destroy a thread each time a connection is built.
+
+Main idea: put a task(descriptor) into a buffer, threads in pool try to fetch the task.
+
+### 13.4 Thread Safe
+
+Key: Fail to protect shared variables
+
+Solution: solved by **lock/semaphores** or try to **make shared variables local**.
+  
+**Reentrant function**: access no shared variables when called by multiple threads. Safe and efficient
+
+Do not race: i may = 50 when thread 0 try to fetch the value
+
+![image](resources/synchronization-race.png)
+
+Race Result:
+
+![image](resources/synchronization-race-2.png)
+
+Deadlock: t1 `P(s0)`, t2 `P(s1)`, t1 `P(s1)`, t2 `P(s0)` -- Deadlock!
+
+Try to acquire resources in the same order to solve the deadlock.

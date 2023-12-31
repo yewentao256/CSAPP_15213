@@ -237,7 +237,7 @@ Lectures:
 - [x] Lecture 22: Network Programming: Part II
 - [x] Lecture 23: Concurrent Programming
 - [x] Lecture 24: Synchronization: Basics
-- [ ] Lecture 25: Synchronization: Advanced
+- [x] Lecture 25: Synchronization: Advanced
 - [ ] Lecture 26: Thread-Level Parallelism
 - [ ] Lecture 27: Future of Computing
 
