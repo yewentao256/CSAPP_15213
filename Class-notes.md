@@ -111,6 +111,8 @@
     - [13.2 Semaphores](#132-semaphores)
     - [13.3 Prethreaded Concurrent server (thread pool)](#133-prethreaded-concurrent-server-thread-pool)
     - [13.4 Thread Safe](#134-thread-safe)
+    - [13.5 Hardwares](#135-hardwares)
+    - [13.6 Sum Example](#136-sum-example)
 
 ## 1. Overview
 
@@ -1700,3 +1702,34 @@ Race Result:
 Deadlock: t1 `P(s0)`, t2 `P(s1)`, t1 `P(s1)`, t2 `P(s0)` -- Deadlock!
 
 Try to acquire resources in the same order to solve the deadlock.
+
+Livelock: Just like deadlock, but this time it will release the lock and retry, so it looks like this:
+
+```bash
+start
+t1 P(s0)
+t2 P(s1)
+t1 P(s1) fail
+t2 P(s0) fail
+t1 V(s0)
+t2 V(s1)
+goto start
+```
+
+### 13.5 Hardwares
+
+Typical multi-core processor:
+
+![image](resources/hardware-multicore-processor.png)
+
+Hyper-threading implementation:
+
+![image](resources/hyper-threading.png)
+
+### 13.6 Sum Example
+
+case1: sum to a global variable using multithreading
+
+![image](resources/sum-multithreading.png)
+
+This can be very slow because the lock takes a lot of time.

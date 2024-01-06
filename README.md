@@ -254,5 +254,5 @@ Recitations(Optional):
 - [x] Recitation 11: Malloc Lab
 - [x] Recitation 12: Debugging Malloc Lab
 - [x] Recitation 13: Proxy Lab
-- [ ] Recitation 14: Synchronization
+- [x] Recitation 14: Synchronization
 - [ ] Recitation 15: Exam review
