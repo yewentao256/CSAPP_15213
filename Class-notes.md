@@ -113,6 +113,7 @@
     - [13.4 Thread Safe](#134-thread-safe)
     - [13.5 Hardwares](#135-hardwares)
     - [13.6 Sum Example](#136-sum-example)
+    - [13.7 Sort Example](#137-sort-example)
 
 ## 1. Overview
 
@@ -1726,6 +1727,22 @@ Hyper-threading implementation:
 
 ![image](resources/hyper-threading.png)
 
+Snoopy Cache:
+
+![image](resources/snoopy-cache.png)
+
+First, the program can not print `1, 100` or `100, 1`
+
+However, if the cache is not protected, it can print `1, 100`
+
+So, we have some mechanism to protect, like the writer-reader problem:
+
+![image](resources/snoopy-cache-2.png)
+
+Then when read, instead of reading from main memory, it reads from another cache:
+
+![image](resources/snoopy-cache-3.png)
+
 ### 13.6 Sum Example
 
 case1: sum to a global variable using multithreading
@@ -1733,3 +1750,31 @@ case1: sum to a global variable using multithreading
 ![image](resources/sum-multithreading.png)
 
 This can be very slow because the lock takes a lot of time.
+
+case2: sum by each thread
+
+![image](resources/sum-multithreading-2.png)
+
+This is much faster
+
+### 13.7 Sort Example
+
+Amdahl's law:
+
+$T_{new}=(1-\alpha)T_{old} + (\alpha T_{old})/k$
+
+Here we optimize the $\alpha$ part by $k$ times. When $k=\infty$, the time still be $(1-\alpha)T_{old}$, which means that we should pay attention to the bottleneck.
+
+Quick Sort Algorithm:
+
+![image](resources/sort-multithreading.png)
+
+Parallel Algorithm:
+
+![image](resources/sort-multithreading-2.png)
+
+Performance:
+
+![image](resources/sort-multithreading-3.png)
+
+fraction: How many threads will be spawned (this is a hyper-parameter can be set), with an input array of 134 217 728 values. If too much, thread overhead can be the main time-killer.
