@@ -239,7 +239,7 @@ Lectures:
 - [x] Lecture 24: Synchronization: Basics
 - [x] Lecture 25: Synchronization: Advanced
 - [x] Lecture 26: Thread-Level Parallelism
-- [ ] Lecture 27: Future of Computing
+- [x] Lecture 27: Future of Computing
 
 Recitations(Optional):
 
