@@ -255,4 +255,4 @@ Recitations(Optional):
 - [x] Recitation 12: Debugging Malloc Lab
 - [x] Recitation 13: Proxy Lab
 - [x] Recitation 14: Synchronization
-- [ ] Recitation 15: Exam review
+- [x] Recitation 15: Exam review
