@@ -14,7 +14,7 @@ Learning About CSAPP-15213
     - [Cachelab](#cachelab)
     - [Shell lab](#shell-lab)
     - [malloc lab](#malloc-lab)
-    - [The rest of lab](#the-rest-of-lab)
+    - [proxy lab](#proxy-lab)
   - [Class Notes](#class-notes)
   - [Learning Process](#learning-process)
 
@@ -104,7 +104,7 @@ Wanna try another attack? Do it by yourself! Try a new random attack, see [attac
 
 In this lab, we will write a small C program that **simulates the behavior of a cache memory** and **optimize a small matrix transpose function**.
 
-There are code like:
+Code example:
 
 ```c
 void access_cache(unsigned long address) {
@@ -139,7 +139,7 @@ Done in 2023/2, see [cachelab](cachelab/README.md) for more details.
 
 In this lab, we will write a simple **Unix shell** that supports job control, including subprocess, signals, foreground background job, interrupts etc.
 
-There are code like:
+Code example:
 
 ```c
 void sigchld_handler(int sig) {
@@ -181,7 +181,7 @@ Done in 2023/4, see [shlab](shelllab/README.md) for more details.
 
 In this lab, we will implement our own versions of `malloc`, `free`, and `realloc`.
 
-There are code like:
+Code example:
 
 ```c
 void *mm_malloc(size_t size) {
@@ -201,9 +201,30 @@ void *mm_malloc(size_t size) {
 
 Done in 2023/9, see [malloc_lab](malloclab/README.md) for more details.
 
-### The rest of lab
+### proxy lab
 
-- [ ] proxylab
+In this lab, we will construct a web proxy.
+
+Code example:
+
+```c
+init_buffer();
+cache_init();
+for (int i = 0; i < NTHREAD; i++) {
+  Pthread_create(&tid, NULL, proxy_thread, NULL);
+}
+
+while (1) {
+  sock_length = sizeof(client_address);
+  connfd = Accept(listenfd, (SA*)&client_address, &sock_length);
+  produce(connfd);
+  Getnameinfo((SA*)&client_address, sock_length, hostname, MAXLINE, port,
+              MAXLINE, 0);
+  printf("Accept Connection from (%s, %s)\n", hostname, port);
+}
+```
+
+Done in 2024/2, see [proxy_lab](proxylab/README.md) for more details.
 
 ## Class Notes
 
